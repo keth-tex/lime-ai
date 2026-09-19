@@ -1,0 +1,21 @@
+# Backend & Server ausschließen (da reiner UI-Fokus)
+backend/
+docs/
+cypress/
+tests/
+scripts/
+
+# Build-Artefakte & Caches (zwingend ausschließen!)
+node_modules/
+.svelte-kit/
+build/
+dist/
+.venv/
+
+# Große Assets, die keine Code-Logik enthalten
+static/
+src/lib/assets/
+package-lock.json
+
+# Optional: Riesige Übersetzungs-Dateien (fluten den Vektorindex)
+# src/lib/i18n/locales/

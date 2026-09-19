@@ -1001,3 +1001,813 @@ html.high-contrast:not(.dark) .shimmer {
 	color: var(--color-gray-800);
 	-webkit-text-fill-color: var(--color-gray-800);
 }
+
+
+
+
+
+/* ======================================================================
+   ======================================================================
+   ====================================================================== */
+
+
+
+
+   /* @font-face {
+  font-family: 'TestFont';
+  src: url(NotoSans-Regular.ttf) format('truetype');
+} */
+
+
+/* latin-ext */
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 300 900;
+  src: url('/assets/fonts/Figtree-Italic-Variable-Latin-Extended.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 300 900;
+  src: url('/assets/fonts/Figtree-Italic-Variable-Latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 300 900;
+  src: url('/assets/fonts/Figtree-Variable-Latin-Extended.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 300 900;
+  src: url('/assets/fonts/Figtree-Variable-Latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.figtree-regular {
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Hard-Override für alle wesentlichen Text-Elemente */
+body, p, button, input, textarea, select {
+  font-family: 'Figtree', sans-serif !important;
+}
+
+:root {
+    /* Unser Ordner-Pfad zentral abgelegt für die Maskierung */
+    --gemini-folder-svg: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19.5 21a3 3 0 0 0 3-3v-4.5a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3V18a3 3 0 0 0 3 3h15ZM1.5 10.146V6a3 3 0 0 1 3-3h5.379a2.25 2.25 0 0 1 1.59.659l2.122 2.121c.14.141.331.22.53.22H19.5a3 3 0 0 1 3 3v1.146A4.483 4.483 0 0 0 19.5 9h-15a4.483 4.483 0 0 0-3 1.146Z'/%3E%3C/svg%3E");
+  --gemini-radius: 8px;
+  /* --- Scrollbar --- */
+  --gemini-scrollbar-hover:       rgb(68, 71, 70);
+  --gemini-scrollbar-active:      rgb(68, 71, 70);
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif !important;
+  /* font-family: "Figtree", sans-serif !important; */
+}
+
+.text-\[0\.9375rem\] {
+    font-size: 1rem !important;
+}
+
+.text-xs {
+    font-size: 0.8125rem !important;
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+}
+
+#sidebar-chat-group .truncate {
+    font-size: 0.875rem !important;
+}
+
+#sidebar-chats-content {
+    margin-top: 0.25rem !important;
+}
+
+#sidebar-chats-content .text-xs {
+    margin-bottom: 0.25rem !important;
+}
+
+[id^="sidebar-"][id$="-button"] .leading-5, #sidebar-webui-name {
+    font-size: 0.875rem !important;
+}
+
+#sidebar-chat-item .text-\[10px\] {
+    font-size: 0.6875rem !important;
+    padding-top: 2px !important;
+    line-height: 1.125rem !important;
+}
+
+#sidebar-folders-content .dark\:text-gray-600 {
+    padding-left: 11px !important;
+}
+
+#messages-container .mt-4 {
+    margin-top: calc(var(--spacing) * 6) !important;
+}
+
+#messages-container .mt-4 .mt-1\.5 {
+    margin-top: calc(var(--spacing) * 3.5) !important;
+}
+
+#messages-container .mt-4 .mt-1\.5 .text-sm {
+    font-size: 0.9375rem !important;
+    line-height: 1.6 !important;
+}
+
+#messages-container .mt-4 .mt-1\.5 .py-1 {
+    padding-block: calc(var(--spacing) * 0.5) !important;
+}
+
+.chat-user .py-1\.5 {
+    padding-block: calc(var(--spacing) * 5) !important;
+}
+
+.chat-user .px-4 {
+    padding-inline: calc(var(--spacing) * 8.25) !important;
+}
+
+#response-message-model-name {
+    margin-bottom: 0.5rem !important;
+}
+
+#response-content-container > div > div > div > div > .markdown-prose {
+    margin-top: 0.5rem !important;
+}
+
+#response-content-container > div > .markdown-prose {
+    margin-top: 1rem !important;
+}
+
+.buttons {
+    margin-top: 0.75rem !important;
+}
+
+hr.border-gray-50.dark\:border-gray-850\/30:is(.dark *) {
+    border-color: var(--color-gray-900) !important;
+}
+
+.markdown-prose :where(blockquote):not(:where([class~=not-prose],[class~=not-prose] *)) {
+    color: var(--tw-prose-quotes);
+    font-style: normal !important;
+    font-weight: 500;
+}
+
+blockquote em {
+    margin-bottom: 0.5rem !important;
+}
+
+.markdown-prose :where(hr):not(:where([class~=not-prose],[class~=not-prose] *)) {
+    margin-block: calc(var(--spacing, .25rem) * 3) !important;
+}
+
+h3 {
+    /* font-size: 1.125rem !important;
+    line-height: 1.8125 !important; */
+    font-size: 1.0625rem !important;
+    line-height: 1.75rem !important;
+    margin-bottom: 0.5625rem !important;
+}
+
+br {
+    display: block !important;
+    margin-bottom: 8px !important;
+    content: "" !important;
+}
+
+.max-w-\[58rem\] {
+    max-width: 48rem !important;
+}
+
+body .markdown-prose {
+    --tw-leading: var(--leading-relaxed, 1.625);
+    max-width: none;
+    line-height: var(--leading-relaxed, 1.625);
+    --tw-font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal, 400);
+    overflow-wrap: break-word;
+    font-size: 1rem !important;
+    color: #d8d8d8 !important;
+}
+
+.markdown-prose :where(ol>li):not(:where([class~=not-prose],[class~=not-prose] *))::marker {
+    color: #a9a9a9 !important;
+    /* font-weight: 400; */
+}
+
+.markdown-prose :where(blockquote p:first-of-type):not(:where([class~=not-prose],[class~=not-prose] *)):before {
+    content: none !important;
+}
+
+.markdown-prose :where(blockquote p:last-of-type):not(:where([class~=not-prose],[class~=not-prose] *)):after {
+    content: none !important;
+}
+
+.markdown-prose :where(li):not(:where([class~=not-prose],[class~=not-prose] *)) {
+    margin-top: 0px !important;
+    margin-bottom: 8px !important;
+}
+
+/* p {
+  font-family: "Figtree", sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+} */
+
+/* --- SIDEBAR OVERRIDE --- */
+/* 1. Verstecke Emojis und nativen Text (ohne das Layout des Containers zu zerstören) */
+.gemini-color-override .group-hover\:hidden {
+    color: transparent !important;
+    font-size: 0 !important;
+}
+/* 2. Verstecke das native WebUI-SVG oder andere Kind-Elemente */
+.gemini-color-override .group-hover\:hidden > * {
+    display: none !important;
+}
+/* 3. Projiziere unser Icon (wird automatisch mit ausgeblendet, wenn der Hover-Chevron kommt!) */
+.gemini-color-override .group-hover\:hidden::before {
+    content: '';
+    display: block;
+    width: 14px; 
+    height: 14px;
+    background-color: var(--folder-color);
+    -webkit-mask: var(--gemini-folder-svg) no-repeat center / contain;
+    mask: var(--gemini-folder-svg) no-repeat center / contain;
+}
+
+/* --- MAIN VIEW OVERRIDE --- */
+.gemini-color-override-main {
+    color: transparent !important;
+    font-size: 0 !important;
+}
+.gemini-color-override-main > * {
+    display: none !important;
+}
+.gemini-color-override-main::before {
+    content: '';
+    display: block;
+    width: 18px; /* Exakt die size-4.5 von Tailwind */
+    height: 18px;
+    background-color: var(--folder-color);
+    -webkit-mask: var(--gemini-folder-svg) no-repeat center / contain;
+    mask: var(--gemini-folder-svg) no-repeat center / contain;
+}
+
+
+/* --- COLOR PICKER (1:1 aus next-level-gemini) --- */
+.webui-color-picker-popup {
+    position: fixed; z-index: 999999;
+    background: #1e1f20; border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); cursor: default;
+}
+.folder-color-swatches {
+    display: grid; grid-template-columns: repeat(5, 20px); gap: 8px;
+}
+.color-swatch {
+    width: 20px; height: 20px; border-radius: 50%; cursor: pointer; 
+    border: 2px solid transparent; transition: transform 0.1s; box-sizing: border-box;
+}
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.selected { border-color: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); }
+.color-picker-separator {
+    height: 1px; background-color: rgba(255, 255, 255, 0.1); width: 100%; margin: 0; border: none;
+}
+.custom-color-section {
+    display: flex; flex-direction: row; align-items: center; justify-content: space-evenly;
+}
+.custom-color-label { font-size: 13px; color: #e3e3e3; }
+.custom-color-wrapper {
+    margin-left: 8px; width: 24px; height: 24px; border-radius: 50%; 
+    background: conic-gradient(from 90deg, red, yellow, lime, aqua, blue, magenta, red); 
+    cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative;
+}
+.custom-color-inner {
+    width: 16px; height: 16px; border-radius: 50%; pointer-events: none; 
+    border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box;
+}
+.custom-color-wrapper input[type="color"] {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+}
+
+.size-3\.5, .gemini-color-override .group-hover\:hidden::before {
+    width: calc(var(--spacing) * 4.5) !important;
+    height: calc(var(--spacing) * 5.5) !important;
+}
+
+.size-3 {
+    width: calc(var(--spacing) * 4) !important;
+    height: calc(var(--spacing) * 5) !important;
+}
+
+/* Ordner-Titel in der Seitenleiste hervorheben (größer und leicht kräftiger) */
+[id^="folder-"][id$="-button"] .min-w-0.truncate {
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+    color: #dadada !important;
+}
+
+[id^="folder-"] {
+    padding-top: 6px !important;
+    padding-bottom: 2px !important;
+    padding-inline-start: 7px !important;
+}
+
+#sidebar-folders-content {
+    padding-bottom: 6px !important;
+}
+
+/* Optional: Die Ordner-Icons ebenfalls einen Hauch vergrößern, damit die Proportionen stimmen */
+/* .custom-webui-folder-icon {
+    width: 16px !important; 
+    height: 16px !important;
+} */
+
+/* --- SORTIERUNG IN ORDNERN --- */
+/* Stellt sicher, dass das Flex-Layout für die Sortierung aktiv ist */
+#sidebar-folders-content div[slot="content"] > .flex-col {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* 1. Weist allen Inhalten (insbesondere Chats) die Standard-Position oben zu */
+#sidebar-folders-content div[slot="content"] > .flex-col > div {
+    order: 1 !important;
+}
+
+/* 2. Sucht gezielt nach Unterordnern und schiebt diese nach unten */
+#sidebar-folders-content div[slot="content"] > .flex-col > div:has([id^="folder-"][id$="-button"]) {
+    order: 2 !important;
+}
+
+/* --- EINRÜCKUNG DER ORDNER-INHALTE --- */
+#sidebar-folders-content div[slot="content"] > .flex-col {
+    /* Schiebt den kompletten Inhalt bündig unter den Ordner-Titel */
+    margin-left: 27px !important; 
+    padding-left: 0 !important;
+    
+    /* Entfernt die vertikale graue Baum-Linie, da sie nun deplatziert wirken würde */
+    border-left: none !important; 
+}
+
+/* --- GLOBALE SCROLLBARS (Next Level Gemini Style) --- */
+/* Custom Scrollbar */
+@media (pointer: fine) {
+  ::-webkit-scrollbar, ::-webkit-scrollbar-corner { height: 26px !important; width: 26px !important; }
+
+  ::-webkit-scrollbar-thumb {
+    background: content-box #333537 !important;
+    border: 4px solid transparent !important;
+    border-radius: var(--gemini-radius) !important;
+    min-height: 52px; min-width: 52px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: content-box var(--gemini-scrollbar-hover) !important; /* Oder eine andere, etwas hellere/dunklere Farbe */
+    border: 4px solid transparent !important;
+    border-radius: var(--gemini-radius) !important;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: content-box var(--gemini-scrollbar-active) !important;
+    border: 4px solid transparent !important;
+    border-radius: var(--gemini-radius) !important;
+  }
+}
+
+@supports not (selector(::-webkit-scrollbar)) {
+  * {
+      scrollbar-width: auto !important;
+      scrollbar-color: #333537 transparent !important;
+    }
+}
+
+/*
+::-webkit-scrollbar { width: 12px !important; height: 12px !important; }
+::-webkit-scrollbar-track { background: transparent !important; }
+::-webkit-scrollbar-thumb { 
+    background-color: rgba(156, 163, 175, 0.3) !important; 
+    border-radius: 6px !important; 
+    border: 3px solid transparent !important; 
+    background-clip: padding-box !important; 
+}
+::-webkit-scrollbar-thumb:hover { background-color: rgba(156, 163, 175, 0.5) !important; }
+*/
+
+/* Zwingt Open WebUI in ein stabiles Layout (SplitPanes-Fix) */
+#chat-container > div.w-full.h-full.flex {
+    flex-direction: row !important;
+}
+
+/* ==========================================================================
+   TOC CONTAINER & LAYOUT (1:1 Next Level Gemini)
+   ========================================================================== */
+#webui-toc-container {
+    width: var(--webui-toc-width, 280px);
+    min-width: 0px;
+    flex-shrink: 0;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: visible !important; /* WICHTIG: Resizer ragt rechts heraus! */
+    box-sizing: border-box;
+    /* background-color: transparent; */
+    background-color: #121212;
+    transition: width 300ms cubic-bezier(0.2, 0, 0, 1);
+    border-left: 1px solid rgba(156, 163, 175, 0.12);
+    /* border-right: 5px solid rgba(156, 163, 175, 0.05); */
+    border-right: 1px solid rgba(156, 163, 175, 0.15);
+    /* z-index: 99 !important; */
+    /* margin-left: 50px !important; */
+}
+
+#webui-toc-container.collapsed {
+    width: 0px !important;
+}
+
+/* Mask for Sliding Door Effect */
+.webui-toc-mask {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    height: 100%;
+    overflow: hidden !important;
+    box-sizing: border-box;
+}
+
+/* Force children to keep width during collapse */
+.webui-toc-mask > * {
+    width: 100% !important;
+    min-width: var(--webui-toc-width, 280px) !important;
+    box-sizing: border-box !important;
+}
+
+.webui-toc-list {
+    padding: 12px !important;
+    margin: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    flex-grow: 1;
+    display: block;
+    box-sizing: border-box !important;
+    /* scrollbar-width: thin !important; */
+    /* scrollbar-color: rgba(156, 163, 175, 0.5) transparent !important; */
+}
+
+/* .webui-toc-list::-webkit-scrollbar { */
+    /* width: 6px !important; */
+    /* display: block !important; */
+/* } */
+
+/* .webui-toc-list::-webkit-scrollbar-thumb { */
+    /* background-color: rgba(156, 163, 175, 0.5) !important; */
+    /* border-radius: 6px !important; */
+    /* border: none !important; /* Entfernt die dicken Ränder vom globalen Style */
+/* } */
+
+/* ==========================================================================
+   TOC ITEMS & CODE BLOCKS
+   ========================================================================== */
+.webui-toc-item {
+    display: block; width: 100%; text-align: left;
+    padding: 11px 19px; border-radius: 8px;
+    color: oklch(0.825 0 0); cursor: pointer; font-size: 15px; line-height: 1.5;
+    word-break: break-word; white-space: normal;
+    border-left: 3px solid transparent; 
+    /* transition: background-color 0.15s, color 0.15s; */
+    pointer-events: auto !important; 
+    /* background: transparent; */
+    border: none;
+    margin-top: 18px !important;
+    margin-bottom: 18px !important;
+    background-color: #262626;
+}
+.webui-toc-item:hover { background-color: rgba(51, 67, 112, 0.25); color: #dadadf; }
+.webui-toc-item.active {
+    background-color: rgba(31, 55, 96, 0.8); /* Gemini Active Blue */
+    color: rgb(223, 231, 245);
+}
+
+.webui-toc-item p { margin: 0 0 6px 0; }
+.webui-toc-item p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   RESIZER (Original Next Level Gemini Style)
+   ========================================================================== */
+#webui-toc-resizer, #sidebar-resizer::after {
+    position: absolute;
+    top: 0; right: -40px; bottom: 0;
+    width: 40px;
+    cursor: default;
+    z-index: 10000 !important; /* Resizer noch eine Ebene höher, damit er über der Nav-Bar klickbar bleibt */
+}
+
+@keyframes change-cursor {
+    from { cursor: default; } to { cursor: col-resize; }
+}
+
+#webui-toc-resizer:hover, #sidebar-resizer:hover::after {
+    animation: change-cursor 0s linear 250ms forwards;
+}
+
+#webui-toc-resizer::before {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+}
+
+#webui-toc-resizer::before, #sidebar-resizer::after {
+    content: '';
+    background-image: linear-gradient(to right, rgba(54, 54, 54, .55), rgba(54, 54, 54, .25)),
+                      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10' width='12' height='10' opacity='0.5'%3E%3Cpolygon points='5,0 0,5 5,10' fill='%23ccc'/%3E%3Cpolygon points='7,0 12,5 7,10' fill='%23ccc'/%3E%3C/svg%3E");
+    background-size: auto, 24px 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 500ms ease 0s;
+}
+
+#webui-toc-resizer:hover::before, #sidebar-resizer:hover::after {
+    opacity: 1;
+    transition: opacity 500ms ease 250ms;
+}
+
+/* ==========================================================================
+   SIDEBAR RESIZER (Navigationsleiste)
+   ========================================================================== */
+
+/* Überschreibt die native Hover-Hervorhebung (die dünne Linie) von Open WebUI */
+#sidebar-resizer,
+#sidebar-resizer:hover {
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Wenn das TOC zugeklappt ist, den TOC-Resizer restlos ausblenden */
+#webui-toc-container.collapsed #webui-toc-resizer {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Global Resizing State */
+.webui-resizing body, .webui-resizing body * {
+    user-select: none !important;
+    cursor: col-resize !important;
+}
+.webui-resizing #webui-toc-container {
+    transition: none !important;
+}
+.webui-resizing iframe, .webui-resizing button, .webui-resizing a {
+    pointer-events: none !important;
+}
+
+/* ==========================================================================
+   TOC CODE BLOCKS
+   ========================================================================== */
+.webui-toc-code-wrapper {
+    background: rgba(0, 0, 0, 0.2); 
+    border-radius: 6px;
+    margin: 8px 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.webui-toc-code-lang {
+    background: rgba(0, 0, 0, 0.3);
+    color: #9ca3af;
+    font-size: 12px;
+    font-family: monospace;
+    padding: 4px 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Überschreibt das alte Code-Block-Styling für das TOC */
+.webui-toc-item pre, .webui-toc-item .webui-toc-code-block {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 8px 10px !important;
+}
+
+/* ==========================================================================
+   TOC CODE-BLOCK SCHRIFTGRÖSSE (inkl. Zeilennummern)
+   ========================================================================== */
+/* Zwingt den CodeMirror (inkl. Gutter) auf die reguläre TOC-Schriftgröße */
+.webui-toc-item .cm-editor,
+.webui-toc-item .cm-content,
+.webui-toc-item .cm-line,
+.webui-toc-item .cm-gutters,
+.webui-toc-item .cm-lineNumbers,
+.webui-toc-item .cm-gutterElement,
+.webui-toc-item .text-sm {
+    font-size: 14px !important;
+}
+
+.webui-toc-item .cm-foldGutter {
+    display: none !important;
+    width: 0px !important;
+}
+
+.webui-toc-item .text-xs {
+    font-size: 13px !important;
+}
+
+nav.sticky .flex-1 {
+    margin-left: calc(var(--spacing) * 1 + 40px);
+}
+
+/* ==========================================================================
+   SIDEBAR ANIMATIONS-FIX (Während des Resizings)
+   ========================================================================== */
+.webui-resizing #sidebar,
+.webui-resizing #sidebar > div {
+    transition: none !important;
+}
+
+.dark\:bg-black:is(.dark *), [id^="code-textarea"] .cm-gutters:is(.dark *), .cm-editor:is(.dark *) {
+    /* background-color:#0c0c0c !important; */
+    background-color: #1c1d21 !important;
+}
+
+.rounded-t-2xl, .rounded-b-2xl {
+    border-radius: var(--gemini-radius) !important;
+}
+
+body #chat-container #messages-container div[dir="ltr"].relative.flex-col .sticky {
+    padding-top: 10px !important;
+    padding-bottom: 5px !important;
+    padding-left: 20px !important;
+    padding-right: 13px !important;
+    border-top-left-radius: var(--gemini-radius) !important;
+    border-top-right-radius: var(--gemini-radius) !important;
+}
+
+body #chat-container #messages-container div[dir="ltr"].relative.flex-col .sticky .truncate {
+    font-size: 14px !important;
+}
+
+.webui-toc-item div[dir="ltr"].relative.flex-col > .items-center {
+    padding-top: 12px !important;
+    padding-bottom: 2px !important;
+    padding-left: 18px !important;
+    padding-right: 11px !important;
+    border-top-left-radius: var(--gemini-radius) !important;
+    border-top-right-radius: var(--gemini-radius) !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+.webui-toc-item div[dir="ltr"].relative.flex-col > .items-center .truncate {
+    font-size: 14px !important;
+}
+
+/* Ändert die Abstände des gesamten Code-Kastens nach außen */
+body #chat-container #messages-container div[dir="ltr"].relative.flex-col .cm-editor {
+    /* margin-top: 24px !important;
+    margin-bottom: 24px !important; */
+    /* Falls du inneres Padding für den Hauptkasten willst: */
+    padding: 10px !important;
+    padding-bottom: 0px !important;
+    border-bottom-left-radius: var(--gemini-radius) !important;
+    border-bottom-right-radius: var(--gemini-radius) !important;
+}
+
+.webui-toc-item div[dir="ltr"].relative.flex-col .cm-editor {
+    padding: 8px !important;
+    padding-bottom: 0px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: var(--gemini-radius) !important;
+    border-bottom-right-radius: var(--gemini-radius) !important;
+}
+
+.webui-toc-item [class^="language-"] {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
+
+/* ==========================================================================
+   GLOBALE HOVER-VERZÖGERUNGEN ABSCHALTEN
+   ========================================================================== */
+/* Setzt die Animationsdauer für alle Elemente auf 0 Sekunden */
+*, *::before, *::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
+/* AUSNAHMEN: Layout-Elemente, die weiterhin weich sliden sollen (beim Öffnen/Schließen) */
+#sidebar, 
+#webui-toc-container {
+    transition-duration: 300ms !important; 
+}
+
+#webui-toc-resizer:hover, #sidebar-resizer:hover::after {
+    animation: change-cursor 0s linear 250ms forwards !important;
+}
+
+#webui-toc-resizer::before, #sidebar-resizer::after {
+    transition: opacity 500ms ease 0s !important;
+}
+
+#webui-toc-resizer:hover::before, #sidebar-resizer:hover::after {
+    transition: opacity 500ms ease 250ms !important;
+}
+
+/* ==========================================================================
+   CODEMIRROR SYNTAX HIGHLIGHTING ("An Old Hope Classic" - Original Source)
+   ========================================================================== */
+
+/* Hintergrund und Standard-Text */
+body #chat-container #messages-container div[dir="ltr"].relative.flex-col .bg-white,
+body #chat-container #messages-container div[dir="ltr"].relative.flex-col .dark\:bg-black,
+body #chat-container #messages-container .cm-editor,
+.webui-toc-item div[dir="ltr"].relative.flex-col .bg-white,
+.webui-toc-item div[dir="ltr"].relative.flex-col .dark\:bg-black,
+.webui-toc-item .cm-editor  {
+    background-color: #1c1d21 !important;
+}
+
+body .cm-editor .cm-content {
+    color: #cbcdd2 !important; /* Foreground */
+    caret-color: #4fb4d8 !important;
+}
+
+/* 1. Kommentare -> Kursiv & Grau */
+body .cm-editor .cm-line span.ͼw {
+    color: #686b78 !important;
+    font-style: italic !important;
+}
+
+/* 2. Strings -> Blau (#4fb4d8) */
+body .cm-editor .cm-line span.ͼ13,
+body .cm-editor .cm-line span.ͼ14 {
+    color: #4fb4d8 !important;
+}
+
+/* 3. Zahlen, Booleans & Null -> Orange (#ef7c2a) */
+body .cm-editor .cm-line span.ͼbc,
+body .cm-editor .cm-line span.ͼc {
+    color: #ef7c2a !important;
+}
+
+/* 4. Keywords & Storage Types (const, let, class, if, return) -> Rot (#eb3d54) & Kursiv */
+body .cm-editor .cm-line span.ͼp,
+body .cm-editor .cm-line span.ͼm {
+    color: #eb3d54 !important;
+    font-style: italic !important;
+}
+
+/* 5. Funktionen & Methoden -> Gelb (#e5cd52) */
+body .cm-editor .cm-line span.ͼr,
+body .cm-editor .cm-line span.ͼb,
+body .cm-editor .cm-line span.ͼf {
+    color: #e5cd52 !important;
+}
+
+/* 6. Variablen (JS/TS) -> Foreground Grau (#cbcdd2) */
+body .cm-editor .cm-line span.ͼq,
+body .cm-editor .cm-line span.ͼd {
+    color: #cbcdd2 !important;
+}
+
+/* 7. Klassen & Typen -> Gelb (#e5cd52) */
+body .cm-editor .cm-line span.ͼo,
+body .cm-editor .cm-line span.ͼl {
+    color: #e5cd52 !important;
+}
+
+/* 8. Operatoren (z.B. +, -, =, ||) -> Grün (#78bd65) */
+body .cm-editor .cm-line span.ͼv {
+    color: #78bd65 !important;
+}
+
+/* 9. HTML/XML Tags -> Rot (#eb3d54) */
+body .cm-editor .cm-line span.ͼy,
+body .cm-editor .cm-line span.ͼ1 {
+    color: #eb3d54 !important;
+}
+
+/* 10. HTML/XML Attribute -> Gelb (#e5cd52) */
+body .cm-editor .cm-line span.ͼx,
+body .cm-editor .cm-line span.ͼ12 {
+    color: #e5cd52 !important;
+}
+
+/* Interpunktion (Klammern etc.) -> Foreground */
+body .cm-editor .cm-line span.ͼt {
+    color: #cbcdd2 !important;
+}
