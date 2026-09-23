@@ -44,6 +44,11 @@
 	export let editCodeBlock = true;
 	export let topPadding = false;
 
+    const filterLangTag = (text: string): string => {
+        if (!text) return '';
+        return text.replace(/(?:\r?\n)?[ \t]*LANG\s*=\s*(?:EN|ES|DE)[ \t]*$/i, '');
+    };
+
 	let showDeleteConfirm = false;
 
 	let messageIndexEdit = false;
@@ -353,7 +358,7 @@
 						}}
 					>
 						<span class="shrink-0 text-[0.75rem] font-medium">{$i18n.t('Timer')}</span>
-						<span class="min-w-0 flex-1 truncate text-[0.75rem]">{message.content}</span>
+						<span class="min-w-0 flex-1 truncate text-[0.75rem]">{filterLangTag(message.content)}</span>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -372,12 +377,12 @@
 							class="mt-2 ml-3 whitespace-pre-wrap break-words border-l border-gray-100 pl-3 text-[0.78125rem] leading-relaxed text-gray-600 dark:border-white/10 dark:text-gray-400"
 							dir={$settings?.chatDirection ?? 'auto'}
 						>
-							{message.content}
+							{filterLangTag(message.content)}
 						</div>
 					{/if}
 				</div>
 			{:else if message?.meta?.internal === true && message?.meta?.type === 'subagent'}
-				<SubagentResultRow content={message.content} result={message.meta} />
+				<SubagentResultRow content={filterLangTag(message.content)} result={message.meta} />
 			{:else if message.content !== ''}
 				<div class="w-full">
 					<div class="flex {($settings?.chatBubble ?? true) ? 'justify-end pb-1' : 'w-full'}">
@@ -393,7 +398,7 @@
 									<div class="markdown-prose">
 										<Markdown
 											id={`${chatId}-${message.id}`}
-											content={message.content}
+											content={filterLangTag(message.content)}
 											{editCodeBlock}
 											{topPadding}
 										/>
@@ -403,7 +408,7 @@
 										class="whitespace-pre-wrap text-[0.9375rem]"
 										dir={$settings?.chatDirection ?? 'auto'}
 									>
-										{message.content}
+										{filterLangTag(message.content)}
 									</div>
 								{/if}
 							{/if}
@@ -568,7 +573,7 @@
 									: 'hover-reveal'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
 								aria-label={$i18n.t('Copy')}
 								on:click={() => {
-									copyToClipboard(message.content);
+									copyToClipboard(filterLangTag(message.content));
 								}}
 							>
 								<svg

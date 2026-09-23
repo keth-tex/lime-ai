@@ -249,6 +249,116 @@
 
 	$: onChange(chatInputDraft);
 
+    // Lokaler Zustand für die aktive Sprache dieses Chats
+    let activeLang: 'de' | 'en' | 'es' = 'de';
+
+    // 1. Beim Wechseln des Chats gespeicherte Sprache laden oder aus history ermitteln
+    $: if (chatId) {
+        const stored = sessionStorage.getItem(`chat_lang_${chatId}`);
+        if (stored === 'en' || stored === 'es' || stored === 'de') {
+            activeLang = stored;
+        } else if (history?.messages) {
+            // Falls noch nichts im Speicher liegt: aktiven Zweig der history rückwärts ablaufen
+            let foundLang: 'de' | 'en' | 'es' = 'de';
+            let currId = history.currentId;
+
+            while (currId && history.messages[currId]) {
+                const m = history.messages[currId];
+                if (m.role === 'user') {
+                    const text = typeof m.content === 'string'
+                        ? m.content
+                        : Array.isArray(m.content)
+                            ? m.content.filter((p: any) => p?.type === 'text').map((p: any) => p.text || '').join(' ')
+                            : '';
+
+                    const match = text.match(/(?:^|\r?\n)[ \t]*LANG\s*=\s*(EN|ES|DE)[ \t]*/i);
+                    if (match) {
+                        foundLang = match[1].toLowerCase() as 'de' | 'en' | 'es';
+                        break;
+                    }
+                }
+                currId = m.parentId;
+            }
+
+            activeLang = foundLang;
+            sessionStorage.setItem(`chat_lang_${chatId}`, activeLang);
+        } else {
+            activeLang = 'de';
+        }
+    }
+
+    const detectLanguage = (text: string): 'de' | 'en' | 'es' => {
+        // 1. Prüfen, ob im aktuellen Eingabetext explizit ein neuer Tag steht
+        const currentMatch = text.trimEnd().match(/(?:^|\r?\n)[ \t]*LANG\s*=\s*(EN|ES|DE)[ \t]*$/i);
+        if (currentMatch) {
+            activeLang = currentMatch[1].toLowerCase() as 'de' | 'en' | 'es';
+            if (chatId) {
+                sessionStorage.setItem(`chat_lang_${chatId}`, activeLang);
+            }
+            return activeLang;
+        }
+
+        // 2. Ansonsten die bisher aktive Sprache für Folge-Prompts beibehalten
+        return activeLang;
+    };
+
+    const replaceQuotesWithGuillemets = (text: string): string => {
+        if (!text) return text;
+
+        // 1. Sprache ermitteln (ohne Code-Blöcke)
+        const codeRegex = /(```[\s\S]*?```|`[^`]+`)/g;
+        const parts = text.split(codeRegex);
+
+        let plainText = "";
+        for (let i = 0; i < parts.length; i += 2) {
+            plainText += parts[i] + " ";
+        }
+
+        const lang = detectLanguage(plainText);
+
+        // 2. Ziel-Anführungszeichen je nach Sprache definieren
+        let qOpen = '»';
+        let qClose = '«';
+
+        if (lang === 'en') {
+            qOpen = '“';
+            qClose = '”';
+        } else if (lang === 'es') {
+            qOpen = '«';
+            qClose = '»';
+        }
+
+        // 3. Anführungszeichen in den Textteilen ersetzen
+        for (let i = 0; i < parts.length; i++) {
+            if (i % 2 !== 0) continue;
+            let t = parts[i];
+
+            t = t.replace(/''/g, '"');
+
+            const anyQuote = '["„“”«»]';
+
+            // Paare erkennen
+            const pairRegex = new RegExp(`(^|[\\s(\\[{<*\\-])` + anyQuote + `([^"„“”«»]+?)` + anyQuote + `(?=$|[\\s.,!?;:)\\]}>*\\-])`, 'g');
+            t = t.replace(pairRegex, `$1${qOpen}$2${qClose}`);
+
+            // Verwaiste öffnende Anführungszeichen
+            const openRegex = new RegExp(`(^|[\\s(\\[{<*\\-])` + anyQuote + `(?=\\S)`, 'g');
+            t = t.replace(openRegex, `$1${qOpen}`);
+
+            // Verwaiste schließende Anführungszeichen
+            const closeRegex = new RegExp(`(\\S)` + anyQuote + `(?=$|[\\s.,!?;:)\\]}>*\\-])`, 'g');
+            t = t.replace(closeRegex, `$1${qClose}`);
+
+            // Hard Fallback für asymmetrische Reste
+            const fallbackRegex = new RegExp(`(\\${qOpen})([^"„“”«»]+)["„“”«»]`, 'g');
+            t = t.replace(fallbackRegex, `$1$2${qClose}`);
+
+            parts[i] = t;
+        }
+
+        return parts.join('');
+    };
+
 	const inputVariableHandler = async (text: string): Promise<string> => {
 		inputVariables = extractInputVariables(text);
 
@@ -1716,6 +1826,7 @@
 								focus({ preventScroll: true });
 
 								if ($settings?.speechAutoSend ?? false) {
+									prompt = replaceQuotesWithGuillemets(prompt);
 									dispatch('submit', prompt);
 								}
 							}}
@@ -1724,6 +1835,7 @@
 					<form
 						class="w-full flex flex-col gap-1.5 {recording ? 'hidden' : ''}"
 						on:submit|preventDefault={() => {
+							prompt = replaceQuotesWithGuillemets(prompt);
 							dispatch('submit', prompt);
 						}}
 					>
@@ -2118,6 +2230,7 @@
 																if (enterPressed) {
 																	e.preventDefault();
 																	if (prompt !== '' || files.length > 0) {
+																		prompt = replaceQuotesWithGuillemets(prompt);
 																		dispatch('submit', prompt);
 																	}
 																}
