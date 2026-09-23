@@ -1,22 +1,101 @@
 const FOLDER_COLORS = ['#000000', '#795548', '#FF5722', '#FF9800', '#FFC107', '#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#9E9E9E', '#607D8B', '#FFFFFF'];
 
 let isFolderEventsBound = false;
+let folderColorCache = {}; // Enthält ausschließlich reine UUIDs als Keys
+let isColorsInitialized = false;
 
+// 1. Auth-Token sicher ermitteln
+function getWebUIToken() {
+    return localStorage.getItem('token') 
+        || localStorage.getItem('auth_token') 
+        || (JSON.parse(localStorage.getItem('user') || '{}')).token;
+}
+
+// 2. Einheitliche Normalisierung: Gibt immer die reine UUID zurück
+function cleanFolderId(rawId) {
+    if (!rawId) return '';
+    return rawId.replace('-button', '').replace(/^folder-/, '');
+}
+
+// 3. Ordnerfarben einmalig vom Server abrufen
+async function initFolderColors() {
+    const token = getWebUIToken();
+    if (!token) return;
+
+    try {
+        const res = await fetch('/api/v1/folders/', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!res.ok) return;
+
+        const folders = await res.json();
+        folderColorCache = {};
+
+        folders.forEach(f => {
+            if (f.meta?.color) {
+                folderColorCache[f.id] = f.meta.color;
+            }
+        });
+
+        isColorsInitialized = true;
+        updateFolderStyles();
+    } catch (err) {
+        console.error('Fehler beim Laden der Ordnerfarben:', err);
+    }
+}
+
+// 4. Farbe im Backend persistieren
+async function saveFolderColorToBackend(folderId, color) {
+    const token = getWebUIToken();
+    if (!token) return;
+
+    const cleanId = cleanFolderId(folderId);
+
+    try {
+        const res = await fetch(`/api/v1/folders/${cleanId}/update`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                meta: {
+                    color: color || null
+                }
+            })
+        });
+        if (!res.ok) {
+            console.error(`Backend Update fehlgeschlagen (${res.status}):`, await res.text());
+        }
+    } catch (err) {
+        console.error(`Netzwerkfehler beim Speichern der Farbe für Ordner ${cleanId}:`, err);
+    }
+}
+
+// --- HAUPTFUNKTION (Wird durch MutationObserver aufgerufen) ---
 async function updateFolderStyles() {
     if (!isFolderEventsBound) {
         setupFolderEventDelegation();
         isFolderEventsBound = true;
     }
 
+    // Beim ersten Aufruf Daten aus dem Backend laden
+    if (!isColorsInitialized) {
+        initFolderColors();
+    }
+
     const folderButtons = document.querySelectorAll(WebUIDOM.folderButton);
-    const colorMap = JSON.parse(localStorage.getItem('webui_folder_colors') || '{}');
+    // Farben synchron aus dem RAM-Cache lesen
+    const colorMap = folderColorCache;
 
     // --- 1. SIDEBAR ---
     folderButtons.forEach(btn => {
-        const folderId = btn.id.replace('-button', '');
-        const color = colorMap[folderId];
+        const folderId = cleanFolderId(btn.id);
+        const color = folderColorCache[folderId];
         
-        // Der Container, der das Native Icon oder Emoji hält
         const nativeIconBtn = btn.querySelector('button.text-gray-600');
         if (!nativeIconBtn) return;
 
@@ -42,13 +121,13 @@ async function updateFolderStyles() {
             for (let b of folderButtons) {
                 const t = b.querySelector(WebUIDOM.folderTitle);
                 if (t && t.textContent.trim() === title) {
-                    activeFolderId = b.id.replace('-button', '');
+                    activeFolderId = cleanFolderId(b.id);
                     break;
                 }
             }
 
             if (activeFolderId) {
-                const color = colorMap[activeFolderId];
+                const color = folderColorCache[activeFolderId];
                 
                 if (color) {
                     iconBtn.classList.add('gemini-color-override-main');
@@ -58,7 +137,6 @@ async function updateFolderStyles() {
                     iconBtn.style.removeProperty('--folder-color');
                 }
 
-                // Paletten-Button rendern
                 let paletteBtn = document.getElementById('webui-color-palette-btn');
                 if (!paletteBtn) {
                     paletteBtn = document.createElement('button');
@@ -74,15 +152,14 @@ async function updateFolderStyles() {
 }
 
 function setupFolderEventDelegation() {
+    // Klick auf Palette in der Hauptansicht
     document.body.addEventListener('click', (e) => {
-        // Picker in der Hauptansicht
         const paletteBtn = e.target.closest('#webui-color-palette-btn');
         if (paletteBtn) {
             e.preventDefault(); e.stopPropagation();
-            const folderId = paletteBtn.dataset.folderId;
+            const folderId = cleanFolderId(paletteBtn.dataset.folderId);
             if (folderId) {
-                const data = JSON.parse(localStorage.getItem('webui_folder_colors') || '{}');
-                const color = data[folderId] || '#9ca3af';
+                const color = folderColorCache[folderId] || '#9ca3af';
                 showColorPicker(e.clientX, e.clientY, folderId, color);
             }
         }
@@ -93,15 +170,16 @@ function setupFolderEventDelegation() {
         const btn = e.target.closest(WebUIDOM.folderButton);
         if (btn) {
             e.preventDefault(); e.stopPropagation();
-            const folderId = btn.id.replace('-button', '');
-            const data = JSON.parse(localStorage.getItem('webui_folder_colors') || '{}');
-            const color = data[folderId] || '#9ca3af';
+            const folderId = cleanFolderId(btn.id);
+            const color = folderColorCache[folderId] || '#9ca3af';
             showColorPicker(e.clientX, e.clientY, folderId, color);
         }
     }, true);
 }
 
-function showColorPicker(x, y, folderId, currentColor) {
+function showColorPicker(x, y, rawFolderId, currentColor) {
+    const folderId = cleanFolderId(rawFolderId);
+
     const existing = document.querySelector('.webui-color-picker-popup');
     if (existing) existing.remove();
     
@@ -110,11 +188,11 @@ function showColorPicker(x, y, folderId, currentColor) {
     popup.style.left = x + 'px';
     popup.style.top = y + 'px';
 
-    const applyColors = async (color) => {
-        const colorMap = JSON.parse(localStorage.getItem('webui_folder_colors') || '{}');
-        colorMap[folderId] = color;
-        localStorage.setItem('webui_folder_colors', JSON.stringify(colorMap));
-        updateFolderStyles(); // Live Update
+    // Aktualisiert Cache + UI sofort und sendet das Update ans Backend
+    const applyColors = (color) => {
+        folderColorCache[folderId] = color;
+        updateFolderStyles();
+        saveFolderColorToBackend(folderId, color);
     };
 
     const updatePickerSelection = (selectedColor) => {
@@ -175,32 +253,38 @@ function showColorPicker(x, y, folderId, currentColor) {
     customInput.type = 'color';
     customInput.value = currentColor.startsWith('#') ? currentColor : '#9ca3af';
     
+    // Bei "input" (Ziehen im Colorpicker) nur UI & Cache updaten, 
+    // das Backend erst bei "change" (Loslassen/Auswählen) updaten, um API-Calls zu schonen
     customInput.addEventListener('input', (e) => {
         currentColor = e.target.value;
         updatePickerSelection(null); 
         customInner.style.backgroundColor = currentColor;
-        applyColors(currentColor);
+        folderColorCache[folderId] = currentColor;
+        updateFolderStyles();
+    });
+
+    customInput.addEventListener('change', (e) => {
+        saveFolderColorToBackend(folderId, e.target.value);
     });
     
     customInputWrapper.appendChild(customInput);
     customSection.appendChild(customInputWrapper);
     popup.appendChild(customSection);
 
-    // 3. Zurücksetzen (Löscht die Farbe)
+    // 3. Zurücksetzen (Farbe entfernen)
     const resetWrapper = document.createElement('div');
     resetWrapper.className = 'mt-2 pt-2 border-t border-gray-600 flex justify-center';
     
     const resetBtn = document.createElement('button');
     resetBtn.className = 'text-[11px] text-gray-400 hover:text-white transition cursor-pointer bg-transparent border-none outline-none';
     resetBtn.textContent = 'WebUI-Standard';
-    resetBtn.addEventListener('click', async (e) => {
+    resetBtn.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
-        const colorMap = JSON.parse(localStorage.getItem('webui_folder_colors') || '{}');
-        delete colorMap[folderId];
-        localStorage.setItem('webui_folder_colors', JSON.stringify(colorMap));
+        delete folderColorCache[folderId];
         
         popup.remove();
         updateFolderStyles(); 
+        saveFolderColorToBackend(folderId, null);
     });
     
     resetWrapper.appendChild(resetBtn);
@@ -208,7 +292,7 @@ function showColorPicker(x, y, folderId, currentColor) {
 
     document.body.appendChild(popup);
     
-    // Position korrigieren, falls der Picker unten aus dem Bildschirm ragt
+    // Position korrigieren, falls der Picker unten aus dem Viewport ragt
     const rect = popup.getBoundingClientRect();
     if (rect.bottom > window.innerHeight) {
         popup.style.top = (y - rect.height - 16) + 'px';

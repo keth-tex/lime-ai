@@ -50,6 +50,7 @@ class FolderModel(BaseModel):
 
 class FolderMetadataResponse(BaseModel):
     icon: Optional[str] = None
+    color: Optional[str] = None
 
 
 class FolderNameIdResponse(BaseModel):

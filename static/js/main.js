@@ -40,11 +40,15 @@ const mainObserver = new MutationObserver((mutations) => {
     
     for (const m of mutations) {
         if (m.addedNodes.length > 0 || m.type === 'characterData') {
-            shouldUpdateFolders = true;
-            
-            // Verhindert Abstürze, wenn Svelte reine Textknoten updatet
             let target = m.target;
             if (target.nodeType === Node.TEXT_NODE) target = target.parentNode;
+
+            // Eigene Popups / Buttons von der Triggerung ausschließen:
+            if (target && target.closest && target.closest('.webui-color-picker-popup')) {
+                continue;
+            }
+
+            shouldUpdateFolders = true;
             
             if (target && target.closest && target.closest(WebUIDOM.messagesContainer)) {
                 shouldUpdateTOC = true;
@@ -81,3 +85,10 @@ mainObserver.observe(document.body, {
     subtree: true,
     characterData: true
 });
+
+// Am Ende deiner Datei oder beim Start aufrufen:
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initFolderColors());
+} else {
+    initFolderColors();
+}
